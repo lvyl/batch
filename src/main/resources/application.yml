@@ -1,0 +1,25 @@
+server:
+  port: ${SERVER_PORT:8080}
+spring:
+  quartz:
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: standbyScheduler
+            instanceId: AUTO
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+logging:
+  config: classpath:log/logback.xml
+mybatis:
+  mapper-locations: classpath:mapper/lotteryTicket.xml
+druid:
+  driverClassName: com.mysql.jdbc.Driver
+  url: jdbc:mysql://106.12.192.13:3306/lotteryticket?useUnicode=true&characterEncoding=utf8
+  username: root
+  password: lvyl1234
+  type: com.alibaba.druid.pool.DruidDataSource

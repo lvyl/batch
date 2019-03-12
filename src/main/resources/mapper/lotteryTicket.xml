@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lvyl.mapper.LotteryTicketMapper">
+    <insert id="insertData" parameterType="java.util.HashMap">
+        INSERT INTO lotteryticket (ticketterm,ticketdate,ticket01,ticket02,ticket03,ticket04,ticket05,ticket06,ticket07)
+        values (#{Term},#{Date},#{Ticket01},#{Ticket02},#{Ticket03},#{Ticket04},#{Ticket05},#{Ticket06},#{Ticket07});
+    </insert>
+    <select id="selectMaxTerm" resultType="java.lang.String">
+        SELECT max(ticketterm)
+        FROM lotteryticket
+    </select>
+    <select id="selectByTerm" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM lotteryticket
+        WHERE ticketterm = #{Term}
+    </select>
+</mapper>

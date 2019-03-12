@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<configuration scan="true">
+	<property resource="log/log.properties"/>
+	<!-- 控制台日志配置 -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<!-- 格式化 -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%p] [%t] %c{36} - %m%n</pattern>
+		</encoder>
+	</appender>
+	<!-- 按照每天生成日志文件 -->
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>${LOG_HOME}/${APP_NAME}.log</file>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+			<pattern>%-5p %d{yyyy-MM-dd HH:mm:ss:SSS} [%thread] %c{0} %m%n</pattern>
+		</encoder>
+	</appender>
+	<root>
+		<level value="${LOGLEVEL}"/>
+		<appender-ref ref="${LOGREF}"/>
+	</root>
+</configuration>
