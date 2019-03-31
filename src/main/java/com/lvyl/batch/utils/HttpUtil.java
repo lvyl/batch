@@ -1,4 +1,6 @@
-package com.lvyl.utils;
+package com.lvyl.batch.utils;
+
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +8,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
-
+@Component
 public class HttpUtil {
     public static String sendPost(String url, String param) {
         PrintWriter out = null;
