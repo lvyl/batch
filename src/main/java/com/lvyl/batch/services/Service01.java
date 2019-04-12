@@ -244,28 +244,8 @@ public class Service01 {
 
             List<Map<String,String>> yuceZuheList = new ArrayList();
             //index
-            int[] indexSZ = {0,0,0,0,0,0,0};
-            loop:while(true){
-                Map tempMap = new HashMap();
-                tempMap.put("ticket01",ticket01.get(indexSZ[0]));
-                tempMap.put("ticket02",ticket02.get(indexSZ[1]));
-                tempMap.put("ticket03",ticket03.get(indexSZ[2]));
-                tempMap.put("ticket04",ticket04.get(indexSZ[3]));
-                tempMap.put("ticket05",ticket05.get(indexSZ[4]));
-                tempMap.put("ticket06",ticket06.get(indexSZ[5]));
-                tempMap.put("ticket07",ticket07.get(indexSZ[6]));
-                yuceZuheList.add(tempMap);
-                for(int in=0;in<indexSZ.length;in++){
-                    if(indexSZ[in]<ticket1_7[in].size()-1){
-                        indexSZ[in] = indexSZ[in] + 1;
-                        break;
-                    }else{
-                        if(in==indexSZ.length-1){
-                            break loop;
-                        }
-                    }
-                }
-            }
+            allPLZH(null,0,ticket1_7,yuceZuheList);
+
             /*
              *遍历 yuceZuheList并与中将号码 对比得出 奖金
              */
@@ -323,17 +303,32 @@ public class Service01 {
             /*
              *计算rate
              */
-            float rate = ((float)allmoney)/((float)yuceZuheList.size()*2);
-            System.out.println("allmoney:"+allmoney+"   chengben:"+yuceZuheList.size()*2+"   "+(int)(rate*100));
-            Map paramMap = new HashMap();
-            paramMap.put("allmoney",allmoney);
-            paramMap.put("chengben",yuceZuheList.size()*2);
-            paramMap.put("rate",(int)(rate*100)+"%");
-            paramMap.put("ticketterm",term);
-            lotteryTicketMapper.updateRate10(paramMap);
-            logger.info(term+"入库成功！");
+//            float rate = ((float)allmoney)/((float)yuceZuheList.size()*2);
+//            System.out.println("allmoney:"+allmoney+"   chengben:"+yuceZuheList.size()*2+"   "+(int)(rate*100));
+//            Map paramMap = new HashMap();
+//            paramMap.put("allmoney",allmoney);
+//            paramMap.put("chengben",yuceZuheList.size()*2);
+//            paramMap.put("rate",(int)(rate*100)+"%");
+//            paramMap.put("ticketterm",term);
+//            lotteryTicketMapper.updateRate10(paramMap);
+//            logger.info(term+"入库成功！");
         }
     }
+    /*
+     * 递归计算所有可能的排列组合
+     */
+    void allPLZH(List temp,int index,List[] data,List result){
+        List tempList = temp==null?new ArrayList():temp;
+        if(index==7){
+            result.add(tempList);
+        }
+        List dataList = (List) data[index];
+        for(int i=0;i<dataList.size();i++){
+            tempList.add(dataList.get(i));
+            allPLZH(tempList,index+1,data,result);
+        }
+    }
+
 
     void putData(String termParam) {
         String result = null;
