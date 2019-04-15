@@ -350,15 +350,15 @@ public class Service01 {
             /*
              *计算rate
              */
-//            float rate = ((float)allmoney)/((float)yuceZuheList.size()*2);
-//            System.out.println("allmoney:"+allmoney+"   chengben:"+yuceZuheList.size()*2+"   "+(int)(rate*100));
-//            Map paramMap = new HashMap();
-//            paramMap.put("allmoney",allmoney);
-//            paramMap.put("chengben",yuceZuheList.size()*2);
-//            paramMap.put("rate",(int)(rate*100)+"%");
-//            paramMap.put("ticketterm",term);
-//            lotteryTicketMapper.updateRate10(paramMap);
-//            logger.info(term+"入库成功！");
+            float rate = ((float)allmoney)/((float)yuceZuheList.size()*2);
+            System.out.println("allmoney:"+allmoney+"   chengben:"+yuceZuheList.size()*2+"   "+(int)(rate*100));
+            Map paramMap = new HashMap();
+            paramMap.put("allmoney",allmoney);
+            paramMap.put("chengben",yuceZuheList.size()*2);
+            paramMap.put("rate",(int)(rate*100)+"%");
+            paramMap.put("ticketterm",term);
+            lotteryTicketMapper.updateRate10(paramMap);
+            logger.info(term+"入库成功！");
         }
     }
     /*
