@@ -46,7 +46,7 @@ public class Service01 {
             logger.debug(termStr+":"+isExits);
             if(isExits.length()<20){
                 logger.debug(termStr+":这一期不是开奖号码！");
-                break;
+                continue;
             }
             /**
              * 查询数据库 是否有这一期号码 没有则入库
