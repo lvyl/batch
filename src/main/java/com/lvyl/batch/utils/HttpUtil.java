@@ -4,7 +4,6 @@ import com.lvyl.batch.actions.GetLotteryTicketDataTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,15 +14,10 @@ import java.net.URLConnection;
 public class HttpUtil {
     Logger logger = LoggerFactory.getLogger(GetLotteryTicketDataTask.class);
 
-    public static void main(String[] args) {
-        System.out.println(new HttpUtil().sendPost("http://www.lottery.gov.cn/api/lottery_kj_detail_new.jspx","_ltype=4&_term=19041"));
-    }
-
     public String sendPost(String url, String param) {
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "";
-
         try {
             URL realUrl = new URL(url);
             URLConnection conn = realUrl.openConnection();
@@ -35,28 +29,27 @@ public class HttpUtil {
             out = new PrintWriter(conn.getOutputStream());
             out.print(param);
             out.flush();
-
-            String line;
-            for(in = new BufferedReader(new InputStreamReader(conn.getInputStream())); (line = in.readLine()) != null; result = result + line) {
+            in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line = "";
+            while (line!=null){
+                result = result + line;
+                line = in.readLine();
             }
+            return result;
         } catch (Exception var16) {
-            logger.info("发送 POST 请求出现异常！" + var16);
-            var16.printStackTrace();
+            logger.error("请求失败，已开始重新发送请求！");
+            return sendPost(url,param);
         } finally {
             try {
                 if (out != null) {
                     out.close();
                 }
-
                 if (in != null) {
                     in.close();
                 }
             } catch (IOException var15) {
                 var15.printStackTrace();
             }
-
         }
-
-        return result;
     }
 }
