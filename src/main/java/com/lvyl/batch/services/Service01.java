@@ -43,7 +43,6 @@ public class Service01 {
              * 判断这一期是否在开奖号码
              */
             String isExits = httpUtil.sendPost("http://www.lottery.gov.cn/api/lottery_kj_detail_new.jspx", "_ltype=4&_term="+termStr);
-            logger.debug(termStr+":"+isExits);
             if(isExits.length()<20){
                 logger.debug(termStr+":这一期不是开奖号码！");
                 continue;
@@ -56,8 +55,6 @@ public class Service01 {
                 this.putData(termStr);
             }
         }
-
-
         this.logger.info("service01 end!");
     }
 
