@@ -20,23 +20,49 @@ public class Service01 {
     private LotteryTicketMapper lotteryTicketMapper;
     @Autowired
     private HttpUtil httpUtil;
+
+    /**
+     * 每天八点进行查询是否开奖
+     */
     public void function01(){
         this.logger.info("service01 begin!");
+        /**
+         * 获取最新一期的号码
+         */
+        int newTerm = 0;
         String result = httpUtil.sendPost("http://www.lottery.gov.cn/api/lottery_kj_detail_new.jspx", "_ltype=4&_term=");
         JSONObject jsonObjectEventName = new JSONObject(result.substring(1, result.length() - 1));
         JSONArray eventNameList = jsonObjectEventName.getJSONArray("eventName");
-
-        for(int i = 0; i < eventNameList.length(); ++i) {
-            String termTmp = eventNameList.getString(i);
-            Integer count = lotteryTicketMapper.selectByTerm(termTmp);
+        newTerm = Integer.parseInt(eventNameList.get(0)+"");
+        /**
+         * 从最新一期循环到 07001
+         */
+        for(int term=newTerm;term>7001;term--){
+            String termStr = term<10001?"0"+term:""+term;
+            /**
+             * 判断这一期是否在开奖号码
+             */
+            String isExits = httpUtil.sendPost("http://www.lottery.gov.cn/api/lottery_kj_detail_new.jspx", "_ltype=4&_term="+termStr);
+            if(isExits.length()<20){
+                logger.debug(termStr+":这一期不是开奖号码！");
+                break;
+            }
+            /**
+             * 查询数据库 是否有这一期号码 没有则入库
+             */
+            Integer count = lotteryTicketMapper.selectByTerm(termStr);
             if (count == 0) {
-                this.putData(termTmp);
+                this.putData(termStr);
             }
         }
+
 
         this.logger.info("service01 end!");
     }
 
+    /**
+     * 下期号码预测  100
+     */
     public void function03(){
         this.logger.info("service03 begin!");
         /*
@@ -111,6 +137,9 @@ public class Service01 {
         this.logger.info("service03 end!");
     }
 
+    /**
+     * 下期号码预测  10
+     */
     public void function02(){
         this.logger.info("service02 begin!");
         /*
@@ -184,6 +213,10 @@ public class Service01 {
         }
         this.logger.info("service02 end!");
     }
+
+    /**
+     * 计算根据10期号码预测的号码的正确率
+     */
     public void function04(){
         /*
          * 取出rate为空的term
@@ -365,7 +398,7 @@ public class Service01 {
             map.put("Ticket06", ticket06);
             map.put("Ticket07", ticket07);
             this.lotteryTicketMapper.insertData(map);
-            this.logger.info(term + " term has insert success!");
+            this.logger.info(term + ":这一期号码已入库！");
         }
     }
 }
