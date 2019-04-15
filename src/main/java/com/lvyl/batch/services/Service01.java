@@ -66,11 +66,11 @@ public class Service01 {
      */
     public void function03(){
         this.logger.info("service03 begin!");
-        /*
+        /**
          *   查出没有预测号码的期号
          */
         List noNumList = lotteryTicketMapper.queryAllTermNoNum100();
-        /*
+        /**
          * 循环开始预测
          */
         for(int i =0;i<noNumList.size();i++) {
@@ -143,11 +143,11 @@ public class Service01 {
      */
     public void function02(){
         this.logger.info("service02 begin!");
-        /*
+        /**
          *   查出没有预测号码的期号
          */
         List noNumList = lotteryTicketMapper.queryAllTermNoNum();
-        /*
+        /**
          * 循环开始预测
          */
         for(int i =0;i<noNumList.size();i++) {
@@ -155,11 +155,11 @@ public class Service01 {
                 break;
             }
             String term = String.valueOf(noNumList.get(i));
-            /*
+            /**
              * 查出这一期往前的十期号码
              */
             List tenNumPrev = lotteryTicketMapper.queryNumTenPrev(term);
-            /*
+            /**
              * 统计每一位出现的号码数量
              */
             Map[] numTotalCount = new Map[7];
@@ -176,7 +176,7 @@ public class Service01 {
                 numTotalCount[in]=ticketMap;
             }
 
-            /*
+            /**
              *开始计算每一位的最大数字 如果有重复  则记录方式如 01/02
              */
             String[] ticket = {"0", "0", "0", "0", "0", "0", "0"};
@@ -219,23 +219,23 @@ public class Service01 {
      * 计算根据10期号码预测的号码的正确率
      */
     public void function04(){
-        /*
+        /**
          * 取出rate为空的term
          */
         List termList = lotteryTicketMapper.queryAllNoneRate10();
-        /*
+        /**
          * 遍历termList计算rate
          */
         for(int i=0;i<termList.size();i++){
             String term = termList.get(i)+"";
-            /*
+            /**
              * 取出与term对应的期号的中奖号码
              */
             List oneList = lotteryTicketMapper.queryNiceNumByTerm10(term);
             if(oneList.size()==0){
                 continue;
             }
-            /*
+            /**
              *把前五个放进qianwunicenum中 后两个放进houernicenum中
              */
             List qianwunicenum = new ArrayList();
@@ -250,7 +250,7 @@ public class Service01 {
                     }
                 }
             }
-            /*
+            /**
              * 取出预测号码  并计算所有组合方式  放入yuceZuheList中
              */
             List yuceList = lotteryTicketMapper.queryYuCeNumByTerm10(term);
@@ -275,11 +275,24 @@ public class Service01 {
                     }
                 }
             }
-
+            List<String> yuceZuheStrList = new ArrayList();
             List<Map<String,String>> yuceZuheList = new ArrayList();
             //index
-            allPLZH(null,0,ticket1_7,yuceZuheList);
+            allPLZH(null,0,ticket1_7,yuceZuheStrList);
 
+            /**
+             * List<String> yuceZuheStrList  =>  List<Map<String,String>> yuceZuheList
+             */
+            for(int in=0;in<yuceZuheStrList.size();in++){
+                String temp = yuceZuheStrList.get(in);
+                logger.info("yucejieguo:"+temp);
+                String[] numStr = temp.split(",");
+                Map<String,String> tempMap = new HashMap();
+                for(int ind=1;ind<=numStr.length;ind++){
+                    tempMap.put("ticket0"+ind,numStr[ind-1]);
+                }
+                yuceZuheList.add(tempMap);
+            }
             /*
              *遍历 yuceZuheList并与中将号码 对比得出 奖金
              */
@@ -351,15 +364,15 @@ public class Service01 {
     /*
      * 递归计算所有可能的排列组合
      */
-    void allPLZH(List temp,int index,List[] data,List result){
-        List tempList = temp==null?new ArrayList():temp;
+    void allPLZH(String temp,int index,List[] data,List result){
         if(index==7){
-            result.add(tempList);
+            result.add(temp);
         }
         List dataList = (List) data[index];
+        String oldTemp = temp;
         for(int i=0;i<dataList.size();i++){
-            tempList.add(dataList.get(i));
-            allPLZH(tempList,index+1,data,result);
+            temp=oldTemp+(oldTemp.equals("")?"":",")+dataList.get(i);
+            allPLZH(temp,index+1,data,result);
         }
     }
 
