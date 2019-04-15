@@ -80,4 +80,27 @@
         set allmoney = #{allmoney},rate = #{rate},chengben = #{chengben}
         where ticketterm = #{ticketterm}
     </update>
+
+
+
+    <!-- 查出所有没有rate的term -->
+    <select id="queryAllNoneRate100" resultType="java.lang.String">
+        select  ticketterm
+        from lotteryticket_yuce_100
+        where rate is null
+    </select>
+
+    <!-- 取出预测号码 -->
+    <select id="queryYuCeNumByTerm100" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select ticketterm,ticket01,ticket02,ticket03,ticket04,ticket05,ticket06,ticket07
+        from lotteryticket_yuce_100
+        where ticketterm = #{term}
+    </select>
+
+    <!-- 插入rate allmoney chengben -->
+    <update id="updateRate100" parameterType="java.util.Map">
+        update lotteryticket_yuce_100
+        set allmoney = #{allmoney},rate = #{rate},chengben = #{chengben}
+        where ticketterm = #{ticketterm}
+    </update>
 </mapper>

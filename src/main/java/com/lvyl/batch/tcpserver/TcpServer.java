@@ -75,6 +75,8 @@ public class TcpServer {
                         service01.function03();
                     }else if(message.equals("04")){
                         service01.function04();
+                    }else if(message.equals("05")){
+                        service01.function05();
                     }
                     BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF-8"));
                     bufferedWriter.write("执行完成：\r\n");
@@ -91,7 +93,8 @@ public class TcpServer {
                     /*01*/        "新开奖号码入库",
                     /*02*/        "根据前十期预测下期号码",
                     /*03*/        "根据前一百期预测下期号码",
-                    /*04*/        "前十期预测的准确率"
+                    /*04*/        "前十期预测的准确率",
+                    /*05*/        "前一百期预测的准确率"
             };
             String serviceStr = "";
             for(int i=0;i<100;i++){

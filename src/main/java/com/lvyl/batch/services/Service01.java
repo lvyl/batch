@@ -278,7 +278,7 @@ public class Service01 {
             List<String> yuceZuheStrList = new ArrayList();
             List<Map<String,String>> yuceZuheList = new ArrayList();
             //index
-            allPLZH(null,0,ticket1_7,yuceZuheStrList);
+            allPLZH("",0,ticket1_7,yuceZuheStrList);
 
             /**
              * List<String> yuceZuheStrList  =>  List<Map<String,String>> yuceZuheList
@@ -339,11 +339,10 @@ public class Service01 {
                     allmoney=allmoney+3000;
                     break;
                 }
-                if(qianwucount==4&&houercount==2){
-                    allmoney=allmoney+3000;
-                    break;
+                if(qianwucount==5&&houercount==0){
+                    allmoney=allmoney+10000;
                 }
-                if(qianwucount==5){
+                if(qianwucount==5&&(houercount==1||houercount==2)){
                     allmoney=allmoney+5000000;
                 }
             }
@@ -361,12 +360,159 @@ public class Service01 {
             logger.info(term+"入库成功！");
         }
     }
+
+    /**
+     * 计算根据100期号码预测的号码的正确率
+     */
+    public void function05(){
+        /**
+         * 取出rate为空的term
+         */
+        List termList = lotteryTicketMapper.queryAllNoneRate100();
+        /**
+         * 遍历termList计算rate
+         */
+        for(int i=0;i<termList.size();i++){
+            String term = termList.get(i)+"";
+            /**
+             * 取出与term对应的期号的中奖号码
+             */
+            List oneList = lotteryTicketMapper.queryNiceNumByTerm10(term);
+            if(oneList.size()==0){
+                continue;
+            }
+            /**
+             *把前五个放进qianwunicenum中 后两个放进houernicenum中
+             */
+            List qianwunicenum = new ArrayList();
+            List houernicenum = new ArrayList();
+            for(int in=0;in<7;in++){
+                Map tempMap = (Map) oneList.get(0);
+                for(int ind=1;ind<=7;ind++){
+                    if(ind<6){
+                        qianwunicenum.add(tempMap.get("ticket0"+ind));
+                    }else{
+                        houernicenum.add(tempMap.get("ticket0"+ind));
+                    }
+                }
+            }
+            /**
+             * 取出预测号码  并计算所有组合方式  放入yuceZuheList中
+             */
+            List yuceList = lotteryTicketMapper.queryYuCeNumByTerm100(term);
+
+            List ticket01 = new ArrayList();
+            List ticket02 = new ArrayList();
+            List ticket03 = new ArrayList();
+            List ticket04 = new ArrayList();
+            List ticket05 = new ArrayList();
+            List ticket06 = new ArrayList();
+            List ticket07 = new ArrayList();
+
+            List[] ticket1_7 = {ticket01,ticket02,ticket03,ticket04,ticket05,ticket06,ticket07};
+
+            for(int in=0;in<yuceList.size();in++){
+                Map tempMap = (Map)yuceList.get(in);
+                for(int ind=1;ind<=7;ind++){
+                    String tempNum = tempMap.get("ticket0"+ind)+"";
+                    String[] tempSZ = tempNum.split("/");
+                    for(String str : tempSZ){
+                        ticket1_7[ind-1].add(str);
+                    }
+                }
+            }
+            List<String> yuceZuheStrList = new ArrayList();
+            List<Map<String,String>> yuceZuheList = new ArrayList();
+            //index
+            allPLZH("",0,ticket1_7,yuceZuheStrList);
+
+            /**
+             * List<String> yuceZuheStrList  =>  List<Map<String,String>> yuceZuheList
+             */
+            for(int in=0;in<yuceZuheStrList.size();in++){
+                String temp = yuceZuheStrList.get(in);
+                logger.info("yucejieguo:"+temp);
+                String[] numStr = temp.split(",");
+                Map<String,String> tempMap = new HashMap();
+                for(int ind=1;ind<=numStr.length;ind++){
+                    tempMap.put("ticket0"+ind,numStr[ind-1]);
+                }
+                yuceZuheList.add(tempMap);
+            }
+            /*
+             *遍历 yuceZuheList并与中将号码 对比得出 奖金
+             */
+            int allmoney=0;//奖金
+            for(int in=0;in<yuceZuheList.size();in++){
+                Map tempMap = yuceZuheList.get(in);
+                int qianwucount=0;
+                int houercount=0;
+                for(int ind=1;ind<=7;ind++){
+                    if(ind<6){
+                        if(qianwunicenum.contains(tempMap.get("ticket0"+ind)+"")){
+                            qianwucount++;
+                        }
+                    }else{
+                        if(houernicenum.contains(tempMap.get("ticket0"+ind)+"")){
+                            houercount++;
+                        }
+                    }
+                }
+                /*
+                 *计算奖金
+                 */
+                if(qianwucount==0&&houercount==2){
+                    allmoney=allmoney+5;
+                    break;
+                }
+                if(qianwucount+houercount==3){
+                    allmoney=allmoney+5;
+                    break;
+                }
+                if((qianwucount==3&&houercount==1)||(qianwucount==2&&houercount==2)){
+                    allmoney=allmoney+10;
+                    break;
+                }
+                if((qianwucount==4&&houercount==0)||(qianwucount==3&&houercount==2)){
+                    allmoney=allmoney+100;
+                    break;
+                }
+                if(qianwucount==4&&houercount==1){
+                    allmoney=allmoney+600;
+                    break;
+                }
+                if(qianwucount==4&&houercount==2){
+                    allmoney=allmoney+3000;
+                    break;
+                }
+                if(qianwucount==5&&houercount==0){
+                    allmoney=allmoney+10000;
+                }
+                if(qianwucount==5&&(houercount==1||houercount==2)){
+                    allmoney=allmoney+5000000;
+                }
+            }
+            /*
+             *计算rate
+             */
+            float rate = ((float)allmoney)/((float)yuceZuheList.size()*2);
+            System.out.println("allmoney:"+allmoney+"   chengben:"+yuceZuheList.size()*2+"   "+(int)(rate*100));
+            Map paramMap = new HashMap();
+            paramMap.put("allmoney",allmoney);
+            paramMap.put("chengben",yuceZuheList.size()*2);
+            paramMap.put("rate",(int)(rate*100)+"%");
+            paramMap.put("ticketterm",term);
+            lotteryTicketMapper.updateRate100(paramMap);
+            logger.info(term+"入库成功！");
+        }
+    }
     /*
      * 递归计算所有可能的排列组合
      */
     void allPLZH(String temp,int index,List[] data,List result){
         if(index==7){
             result.add(temp);
+            return;
         }
         List dataList = (List) data[index];
         String oldTemp = temp;

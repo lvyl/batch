@@ -18,7 +18,7 @@ logging:
 mybatis:
   mapper-locations: classpath:mapper/lotteryTicket.xml
 druid:
-  driverClassName: com.mysql.jdbc.Driver
+  driverClassName: com.mysql.cj.jdbc.Driver
   url: jdbc:mysql://119.3.0.12:3306/lotteryticket?useUnicode=true&characterEncoding=utf8
   username: root
   password: lvyl1234

@@ -29,4 +29,10 @@ public interface LotteryTicketMapper {
     List queryYuCeNumByTerm10(String term);
 
     void updateRate10(Map map);
+
+    List queryAllNoneRate100();
+
+    List queryYuCeNumByTerm100(String term);
+
+    void updateRate100(Map map);
 }
