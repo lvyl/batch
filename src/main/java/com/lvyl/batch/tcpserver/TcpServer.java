@@ -61,23 +61,28 @@ public class TcpServer {
             while(true){
                 String message = null;
                 try {
+                    try{
+                        Thread.sleep(1000);
+                    }catch (Exception e){
+                        logger.error("Thread.sleep fail!"+e.toString());
+                    }
                     bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     message = bufferedReader.readLine();
                     if(null == message){
                         break;
                     }
-//                    System.out.println(message);
-//                    if(message.equals("01")){
-//                        service01.function01();
-//                    }else if(message.equals("02")){
-//                        service01.function02();
-//                    }else if(message.equals("03")){
-//                        service01.function03();
-//                    }else if(message.equals("04")){
-//                        service01.function04();
-//                    }
+                    System.out.println(message);
+                    if(message.equals("01")){
+                        service01.function01();
+                    }else if(message.equals("02")){
+                        service01.function02();
+                    }else if(message.equals("03")){
+                        service01.function03();
+                    }else if(message.equals("04")){
+                        service01.function04();
+                    }
                     BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                    bufferedWriter.write(message+"\r\n");
+                    bufferedWriter.write("执行完成：\r\n");
                     bufferedWriter.flush();
                 } catch (IOException e) {
                     logger.info("accept failed!"+e);
