@@ -61,11 +61,6 @@ public class TcpServer {
             while(true){
                 String message = null;
                 try {
-                    try{
-                        Thread.sleep(1000);
-                    }catch (Exception e){
-                        logger.error("Thread.sleep fail!"+e.toString());
-                    }
                     bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     message = bufferedReader.readLine();
                     if(null == message){
@@ -81,7 +76,7 @@ public class TcpServer {
                     }else if(message.equals("04")){
                         service01.function04();
                     }
-                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF-8"));
                     bufferedWriter.write("执行完成：\r\n");
                     bufferedWriter.flush();
                 } catch (IOException e) {
