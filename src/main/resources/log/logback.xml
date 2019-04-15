@@ -15,6 +15,7 @@
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
 			<pattern>%-5p %d{yyyy-MM-dd HH:mm:ss:SSS} [%thread] %c{0} %m%n</pattern>
+			<charset>UTF-8</charset>
 		</encoder>
 	</appender>
 	<root>
