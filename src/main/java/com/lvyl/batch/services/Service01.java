@@ -38,6 +38,9 @@ public class Service01 {
          * 从最新一期循环到 07001
          */
         for(int term=newTerm;term>7001;term--){
+            if(term%1000==0){
+                term=term-700;
+            }
             String termStr = term<10001?"0"+term:""+term;
             /**
              * 判断这一期是否在开奖号码
