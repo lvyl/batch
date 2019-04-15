@@ -85,7 +85,8 @@ public class TcpServer {
                     bufferedWriter.write("执行完成：\r\n");
                     bufferedWriter.flush();
                 } catch (IOException e) {
-                    logger.info("accept failed!"+e);
+                    logger.info("断开连接！");
+                    break;
                 }
             }
         }
